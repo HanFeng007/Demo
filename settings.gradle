@@ -1,0 +1,2 @@
+include ':mvpdemo'
+rootProject.name='Demo'
