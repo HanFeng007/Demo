@@ -2,6 +2,7 @@ package com.example.mvpdemo.base;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,17 +11,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.mvpdemo.BuildConfig;
+
 /**
  * @ClassName: BaseFragment
  * @Description:
  * @Author: Administrator
  * @CreateDate: 2020/2/28 10:25
+ *
+ * TODO  fragment的懒加载完善
  */
 public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragment {
 
     protected P mPresenter;
-    private boolean isVisible;//界面是否可见
-    private boolean isFocus;//是否获取到焦点
+    private boolean isVisible = false;//界面是否可见
+    private boolean isFocus = false;//是否获取到焦点
+    private boolean isLoadData = false;//是否获取到焦点
     protected Context context;
 
     @Override
@@ -51,19 +57,27 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        if (BuildConfig.DEBUG) {
+            Log.e(this.getClass().getSimpleName().toString(), "setUserVisibleHint：" + isVisibleToUser);
+        }
         isVisible = isVisibleToUser;
+        isLoadData();//这里也要设置一个
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        if (BuildConfig.DEBUG) {
+            Log.e(this.getClass().getSimpleName().toString(), "onResume：");
+        }
         isFocus = true;
         isLoadData();
     }
 
     private void isLoadData() {
-        if (isFocus && isVisible) {
+        if (isFocus && isVisible&&!isLoadData) {
             loadData();
+            isLoadData = true;
         }
     }
 
@@ -74,6 +88,7 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
 
     /**
      * 初始化资源控件
+     *
      * @param view
      */
     protected abstract void initFragmentView(View view);
