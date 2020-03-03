@@ -1,7 +1,7 @@
 package com.example.mvpdemo.ui.frag;
 
 
-import android.util.Log;
+import android.content.Intent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -16,6 +16,7 @@ import com.example.mvpdemo.base.BaseFragment;
 import com.example.mvpdemo.bean.FirstBean;
 import com.example.mvpdemo.contract.FirstContract;
 import com.example.mvpdemo.presenter.FirstPresenter;
+import com.example.mvpdemo.ui.act.WebActivity;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -51,8 +52,10 @@ public class FirstFragment extends BaseFragment<FirstContract.IView, FirstPresen
     protected void initFragmentView(View view) {
         TabLayout tablayout = getActivity().findViewById(R.id.tablayout);
         localCategory = tablayout.getTabAt(0).getText().toString();
+
         firstRv = view.findViewById(R.id.firstRv);
         firstSrt = view.findViewById(R.id.firstRefresh);
+
         adapter = new FirstAdapter(R.layout.list_item, results);
         //设置适配器
         firstRv.setAdapter(adapter);
@@ -64,7 +67,6 @@ public class FirstFragment extends BaseFragment<FirstContract.IView, FirstPresen
         adapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
             public void onLoadMoreRequested() {
-                Log.e("FirstFragment", "加载!");
                 isLoad = true;
                 pageNum += 1;
                 mPresenter.loadData(localCategory, pageNum);
@@ -82,6 +84,16 @@ public class FirstFragment extends BaseFragment<FirstContract.IView, FirstPresen
             }
         });
 
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                FirstBean.ResultsBean item = (FirstBean.ResultsBean) adapter.getItem(position);
+                Intent intent = new Intent(context, WebActivity.class);
+                intent.putExtra("url", item.getUrl());
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -96,41 +108,35 @@ public class FirstFragment extends BaseFragment<FirstContract.IView, FirstPresen
 
     @Override
     public void recieveData(final String string) {
+        //解析json,得到数据集
+        FirstBean firstBean = gson.fromJson(string, FirstBean.class);
+        results = firstBean.getResults();
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //解析json,得到数据集
-                FirstBean firstBean = gson.fromJson(string, FirstBean.class);
-                results = firstBean.getResults();
                 if (results.size() != 0) {
 
                     if (isFirst) {
                         adapter.addData(results);
-                        adapter.loadMoreComplete();
-                        isFirst = false;
                     }
 
                     if (isLoad) {
                         adapter.loadMoreComplete();//需要调用刷新完成的方法
                         adapter.addData(results);
-                        adapter.loadMoreComplete();
                         isLoad = false;
                     }
 
-                    if (isRefresh){
-                        Log.e("FirstFragment", "刷新的响应");
+                    if (isRefresh) {
                         firstSrt.finishRefresh(true);
                         adapter.setNewData(results);
                         isRefresh = false;
                     }
 
                 } else {
-                    Log.e("FirstFragment", "么得数据咯");
                     isLoad = false;
-                    isFirst = false;
                     isRefresh = false;
                     adapter.loadMoreEnd();
-                    firstSrt.finishRefresh(false);
+                    firstSrt.finishRefresh(true);
                 }
             }
         });

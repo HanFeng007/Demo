@@ -3,7 +3,7 @@ package com.example.mvpdemo.presenter;
 import com.example.mvpdemo.base.BasePresenter;
 import com.example.mvpdemo.contract.FirstContract;
 import com.example.mvpdemo.model.ModelCallback;
-import com.example.mvpdemo.model.ModelImpl;
+import com.example.mvpdemo.model.OneModelImpl;
 
 /**
  * @ClassName: FirstPresenter
@@ -13,10 +13,10 @@ import com.example.mvpdemo.model.ModelImpl;
  */
 public class FirstPresenter extends BasePresenter<FirstContract.IView> {
 
-    private ModelImpl model;
+    private OneModelImpl model;
 
     public FirstPresenter() {
-        model = new ModelImpl();
+        model = new OneModelImpl();
     }
 
     public void loadData(String localCategory, int pageNum) {

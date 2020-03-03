@@ -1,18 +1,18 @@
 package com.example.mvpdemo.model;
 
-import com.example.mvpdemo.contract.FirstContract;
+import com.example.mvpdemo.contract.SecondContract;
 import com.example.mvpdemo.utils.AppUtil;
 import com.example.mvpdemo.utils.OkHttpUtil;
 
 /**
- * @ClassName: ModelImpl
+ * @ClassName: TwoModelImpl
  * @Description:
  * @Author: Administrator
- * @CreateDate: 2020/3/2 20:27
+ * @CreateDate: 2020/3/3 13:42
  */
-public class ModelImpl implements FirstContract.IModel {
+public class TwoModelImpl implements SecondContract.IModel {
     @Override
-    public void loadData(String category, int pageNum, final ModelCallback callback) {
+    public void requestData(String category, int pageNum, final ModelCallback callback) {
         OkHttpUtil.getInstance().httpGet(AppUtil.generateUrl(category, pageNum), new OkHttpUtil.ICallback() {
             @Override
             public void invoke(String string) {

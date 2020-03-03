@@ -62,9 +62,20 @@ public class OkHttpUtil {
         });
     }
 
-    public void httpPost(String urlString, FormBody formBody, Callback callback) {
+    public void httpPost(String urlString, FormBody formBody, final ICallback callback) {
         Request request = requestBuilder.url(urlString).method("POST", formBody).build();
-        okHttpClient.newCall(request).enqueue(callback);
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                callback.invoke("数据错误");
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                callback.invoke(response.body().string());
+            }
+        });
     }
 
     /**
