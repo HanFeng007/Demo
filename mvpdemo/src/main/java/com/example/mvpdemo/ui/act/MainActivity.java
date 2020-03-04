@@ -1,6 +1,7 @@
 package com.example.mvpdemo.ui.act;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -13,6 +14,7 @@ import com.example.mvpdemo.ui.frag.FirstFragment;
 import com.example.mvpdemo.ui.frag.SecondFragment;
 import com.example.mvpdemo.ui.frag.ThirdFragment;
 import com.google.android.material.tabs.TabLayout;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.ArrayList;
 
@@ -22,6 +24,7 @@ public class MainActivity extends FragmentActivity {
     private ViewPager viewpager;
     private ArrayList<Fragment> fragments;
     private ArrayList<String> titles;
+    private View view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +34,16 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void initView() {
+
         tablayout = findViewById(R.id.tablayout);
         viewpager = findViewById(R.id.viewpager);
+        view = findViewById(R.id.viewImmer);
+
+        ImmersionBar
+                .with(this)
+                .statusBarView(view)
+                .init();
+
         fragments = new ArrayList<>();
         fragments.add(new FirstFragment());
         fragments.add(new SecondFragment());

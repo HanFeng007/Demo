@@ -18,15 +18,15 @@ import com.example.mvpdemo.BuildConfig;
  * @Description:
  * @Author: Administrator
  * @CreateDate: 2020/2/28 10:25
- *
+ * <p>
  * TODO  fragment的懒加载完善
  */
 public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragment {
 
     protected P mPresenter;
-    private boolean isVisible = false;//界面是否可见
-    private boolean isFocus = false;//是否获取到焦点
-    private boolean isLoadData = false;//是否获取到焦点
+    private boolean hasLoadData;//是否加载过数据
+    private boolean isViewPrepared;//视图是否创建完成
+    private boolean isVisible;
     protected Context context;
 
     @Override
@@ -52,6 +52,7 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initFragmentView(view);
+        isViewPrepared = true;
     }
 
     @Override
@@ -61,24 +62,28 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
             Log.e(this.getClass().getSimpleName().toString(), "setUserVisibleHint：" + isVisibleToUser);
         }
         isVisible = isVisibleToUser;
-        isLoadData();//这里也要设置一个
+        isLoadData();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (BuildConfig.DEBUG) {
-            Log.e(this.getClass().getSimpleName().toString(), "onResume：");
-        }
-        isFocus = true;
+        Log.e(this.getClass().getSimpleName().toString(), "onResume：");
         isLoadData();
     }
 
     private void isLoadData() {
-        if (isFocus && isVisible&&!isLoadData) {
+        if (!hasLoadData && isViewPrepared && isVisible) {
             loadData();
-            isLoadData = true;
+            hasLoadData = true;
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        hasLoadData = false;
+        isViewPrepared = false;
     }
 
     /**

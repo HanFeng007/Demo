@@ -33,7 +33,7 @@ public class OkHttpUtil {
         okHttpClient = builder.addInterceptor(new RequestLoggerInterceptor())
                 .addInterceptor(new ResponseLoggerInterceptor())
                 .build();
-//        requestBuilder = new Request.Builder();//省的每次都new  request操作,直接builder出来,随后需要什么往里加,build出来即可
+        requestBuilder = new Request.Builder();//省的每次都new  request操作,直接builder出来,随后需要什么往里加,build出来即可
     }
 
     public static OkHttpUtil getInstance() {
@@ -48,7 +48,7 @@ public class OkHttpUtil {
     }
 
     public void httpGet(String url, final ICallback callback) {
-        Request request = new Request.Builder().url(url).build();
+        Request request = requestBuilder.url(url).build();
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {

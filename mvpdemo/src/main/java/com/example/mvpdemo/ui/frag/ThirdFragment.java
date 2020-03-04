@@ -44,7 +44,8 @@ public class ThirdFragment extends BaseFragment<ThirdContract.IView, ThirdPresen
 
     @Override
     protected void loadData() {
-
+        isFirst = true;
+        mPresenter.loadData(category, pageNum);
     }
 
     @Override
@@ -54,9 +55,6 @@ public class ThirdFragment extends BaseFragment<ThirdContract.IView, ThirdPresen
 
         TabLayout tabLayout = getActivity().findViewById(R.id.tablayout);
         category = tabLayout.getTabAt(2).getText().toString();
-
-        isFirst = true;
-        mPresenter.loadData(category, pageNum);
 
         adapter = new FirstAdapter(R.layout.list_item, results);
         thirdRv.setAdapter(adapter);
