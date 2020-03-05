@@ -17,6 +17,7 @@ import com.example.mvpdemo.bean.FirstBean;
 import com.example.mvpdemo.contract.SecondContract;
 import com.example.mvpdemo.presenter.SecondPresenter;
 import com.example.mvpdemo.ui.act.WebActivity;
+import com.example.mvpdemo.utils.LoadingDialogUtils;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -28,6 +29,7 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
+ * 加载时显示loading
  */
 public class SecondFragment extends BaseFragment<SecondContract.IView, SecondPresenter> implements SecondContract.IView {
 
@@ -46,6 +48,7 @@ public class SecondFragment extends BaseFragment<SecondContract.IView, SecondPre
     protected void loadData() {
         isFirst = true;
         mPresenter.loadData(category, pageNum);
+        LoadingDialogUtils.show(getActivity());
     }
 
     @Override
@@ -68,6 +71,7 @@ public class SecondFragment extends BaseFragment<SecondContract.IView, SecondPre
             public void onLoadMoreRequested() {
                 pageNum += 1;
                 isLoad = true;
+                secondSrl.setEnableRefresh(false);//是否启用下拉刷新功能
                 mPresenter.loadData(category, pageNum);
             }
         }, secondRv);
@@ -77,6 +81,7 @@ public class SecondFragment extends BaseFragment<SecondContract.IView, SecondPre
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 pageNum = 1;
                 isRefresh = true;
+                adapter.setEnableLoadMore(false);//是否启用上拉加载功能
                 mPresenter.loadData(category, pageNum);
             }
         });
@@ -105,6 +110,8 @@ public class SecondFragment extends BaseFragment<SecondContract.IView, SecondPre
 
     @Override
     public void responseData(final String string) {
+        LoadingDialogUtils.dismiss();
+
         FirstBean bean = gson.fromJson(string, FirstBean.class);
         results = bean.getResults();
         getActivity().runOnUiThread(new Runnable() {
@@ -116,12 +123,14 @@ public class SecondFragment extends BaseFragment<SecondContract.IView, SecondPre
                         adapter.addData(results);
                         adapter.loadMoreComplete();
                         isLoad = false;
+                        secondSrl.setEnableRefresh(true);
                     }
 
                     if (isRefresh) {
                         adapter.setNewData(results);
                         isRefresh = false;
                         secondSrl.finishRefresh();
+                        adapter.setEnableLoadMore(true);
                     }
 
                     if (isFirst) {
@@ -133,6 +142,8 @@ public class SecondFragment extends BaseFragment<SecondContract.IView, SecondPre
                     isRefresh = false;
                     adapter.loadMoreEnd();
                     secondSrl.finishRefresh();
+                    secondSrl.setEnableRefresh(true);
+                    adapter.setEnableLoadMore(true);
                 }
 
 

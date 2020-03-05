@@ -17,6 +17,7 @@ import com.example.mvpdemo.bean.FirstBean;
 import com.example.mvpdemo.contract.ThirdContract;
 import com.example.mvpdemo.presenter.ThirdPresenter;
 import com.example.mvpdemo.ui.act.WebActivity;
+import com.example.mvpdemo.utils.LoadingDialogUtils;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -46,6 +47,7 @@ public class ThirdFragment extends BaseFragment<ThirdContract.IView, ThirdPresen
     protected void loadData() {
         isFirst = true;
         mPresenter.loadData(category, pageNum);
+        LoadingDialogUtils.show(getActivity());
     }
 
     @Override
@@ -102,6 +104,8 @@ public class ThirdFragment extends BaseFragment<ThirdContract.IView, ThirdPresen
 
     @Override
     public void responseData(final String string) {
+        LoadingDialogUtils.dismiss();
+
         FirstBean bean = gson.fromJson(string, FirstBean.class);
         results = bean.getResults();
         getActivity().runOnUiThread(new Runnable() {

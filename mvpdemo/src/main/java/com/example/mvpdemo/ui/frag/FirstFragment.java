@@ -69,6 +69,7 @@ public class FirstFragment extends BaseFragment<FirstContract.IView, FirstPresen
             public void onLoadMoreRequested() {
                 isLoad = true;
                 pageNum += 1;
+                firstSrt.setEnableRefresh(false);//是否启用下拉刷新功能
                 mPresenter.loadData(localCategory, pageNum);
             }
         }, firstRv);
@@ -80,6 +81,7 @@ public class FirstFragment extends BaseFragment<FirstContract.IView, FirstPresen
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 pageNum = 1;
                 isRefresh = true;
+                adapter.setEnableLoadMore(false);
                 mPresenter.loadData(localCategory, pageNum);
             }
         });
@@ -124,12 +126,18 @@ public class FirstFragment extends BaseFragment<FirstContract.IView, FirstPresen
                         adapter.loadMoreComplete();//需要调用刷新完成的方法
                         adapter.addData(results);
                         isLoad = false;
+
+
+                        firstSrt.setEnableRefresh(true);//是否启用下拉刷新功能
                     }
 
                     if (isRefresh) {
                         firstSrt.finishRefresh(true);
                         adapter.setNewData(results);
                         isRefresh = false;
+
+
+                        adapter.setEnableLoadMore(true);
                     }
 
                 } else {
@@ -137,6 +145,10 @@ public class FirstFragment extends BaseFragment<FirstContract.IView, FirstPresen
                     isRefresh = false;
                     adapter.loadMoreEnd();
                     firstSrt.finishRefresh(true);
+
+
+                    adapter.setEnableLoadMore(true);
+                    firstSrt.setEnableRefresh(true);//是否启用下拉刷新功能
                 }
             }
         });
