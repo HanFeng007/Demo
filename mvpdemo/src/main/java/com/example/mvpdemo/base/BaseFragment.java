@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.mvpdemo.BuildConfig;
+import com.example.mvpdemo.utils.LoadingDialogUtils;
 
 /**
  * @ClassName: BaseFragment
@@ -53,6 +54,7 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         super.onViewCreated(view, savedInstanceState);
         initFragmentView(view);
         isViewPrepared = true;
+        LoadingDialogUtils.init(getActivity());
     }
 
     @Override
@@ -82,8 +84,13 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        hasLoadData = false;
         isViewPrepared = false;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        hasLoadData = false;
     }
 
     /**
@@ -110,6 +117,7 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
             mPresenter.detachView();
             mPresenter = null;
         }
+        LoadingDialogUtils.unInit();
     }
 
     /**
