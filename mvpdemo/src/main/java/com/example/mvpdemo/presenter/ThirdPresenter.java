@@ -5,6 +5,8 @@ import com.example.mvpdemo.contract.ThirdContract;
 import com.example.mvpdemo.model.ModelCallback;
 import com.example.mvpdemo.model.ThreeModelImpl;
 
+import java.util.HashMap;
+
 /**
  * @ClassName: ThirdPresenter
  * @Description:
@@ -19,20 +21,20 @@ public class ThirdPresenter extends BasePresenter<ThirdContract.IView> {
         model = new ThreeModelImpl();
     }
 
-    public void loadData(String category, int pageNum) {
-        model.requestData(category, pageNum, new ModelCallback() {
+    @Override
+    protected void detachView() {
+        super.detachView();
+        if (model != null) {
+            model = null;
+        }
+    }
+
+    public void loadData(HashMap<String, String> requestMap) {
+        model.requestData(requestMap, new ModelCallback() {
             @Override
             public void invoke(String string) {
                 getView().responseData(string);
             }
         });
-    }
-
-    @Override
-    protected void detachView() {
-        super.detachView();
-        if (model!=null){
-            model = null;
-        }
     }
 }

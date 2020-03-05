@@ -2,6 +2,8 @@ package com.example.mvpdemo.contract;
 
 import com.example.mvpdemo.model.ModelCallback;
 
+import java.util.HashMap;
+
 /**
  * @ClassName: ThirdContract
  * @Description:
@@ -9,12 +11,12 @@ import com.example.mvpdemo.model.ModelCallback;
  * @CreateDate: 2020/3/3 14:39
  */
 public interface ThirdContract {
-    interface IView{
+    interface IView {
 
         void responseData(String string);
     }
-    interface IModel{
 
-        void requestData(String category, int pageNum, ModelCallback callback);
+    interface IModel {
+        void requestData(HashMap<String, String> requestMap, ModelCallback callback);
     }
 }

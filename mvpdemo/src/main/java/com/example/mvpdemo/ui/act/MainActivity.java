@@ -66,7 +66,7 @@ public class MainActivity extends FragmentActivity {
         titles = new ArrayList<>();
         titles.add("Android");
         titles.add("iOS");
-        titles.add("前端");
+        titles.add("历史事件列表");
         for (int i = 0; i < titles.size(); i++) {
             tablayout.getTabAt(i).setText(titles.get(i));
         }

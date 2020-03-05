@@ -2,7 +2,6 @@
     <string name="app_name">MvpDemo</string>
 
 
-
     <string name="dialog_hint">提示</string>
     <string name="dialog_direction">将要打开一个新的页面</string>
     <string name="dialog_confirm">确定</string>

@@ -19,6 +19,7 @@ import com.example.mvpdemo.contract.FirstContract;
 import com.example.mvpdemo.presenter.FirstPresenter;
 import com.example.mvpdemo.ui.act.WebActivity;
 import com.example.mvpdemo.utils.AppUtil;
+import com.example.mvpdemo.utils.LoadingDialogUtils;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -47,6 +48,7 @@ public class FirstFragment extends BaseFragment<FirstContract.IView, FirstPresen
     @Override
     protected void loadData() {
         isFirst = true;
+        LoadingDialogUtils.show(getActivity());
         mPresenter.loadData(localCategory, pageNum);
     }
 
@@ -128,6 +130,7 @@ public class FirstFragment extends BaseFragment<FirstContract.IView, FirstPresen
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                LoadingDialogUtils.dismiss();
                 if (results.size() != 0) {
 
                     if (isFirst) {

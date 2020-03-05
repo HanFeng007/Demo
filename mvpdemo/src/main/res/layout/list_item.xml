@@ -6,6 +6,13 @@
     android:layout_marginTop="10dp"
     android:background="@color/colorBlue"
     android:orientation="vertical">
+    <!--历史-->
+    <TextView
+        android:id="@+id/title_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/desc_tv"

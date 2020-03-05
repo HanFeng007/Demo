@@ -1,29 +1,28 @@
 package com.example.mvpdemo.ui.frag;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.mvpdemo.R;
-import com.example.mvpdemo.adapter.FirstAdapter;
+import com.example.mvpdemo.adapter.HistoryAdapter;
 import com.example.mvpdemo.base.BaseFragment;
-import com.example.mvpdemo.bean.FirstBean;
+import com.example.mvpdemo.bean.HistoryBean;
 import com.example.mvpdemo.contract.ThirdContract;
 import com.example.mvpdemo.presenter.ThirdPresenter;
-import com.example.mvpdemo.ui.act.WebActivity;
+import com.example.mvpdemo.ui.act.HistoryDetailActivity;
+import com.example.mvpdemo.utils.AppUtil;
 import com.example.mvpdemo.utils.LoadingDialogUtils;
-import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -34,62 +33,37 @@ public class ThirdFragment extends BaseFragment<ThirdContract.IView, ThirdPresen
 
     private SmartRefreshLayout thirdRefresh;
     private RecyclerView thirdRv;
-    private String category;
-    private int pageNum = 1;
+    private HashMap<String, String> requestMap = new HashMap<>();
     Gson gson = new Gson();
-    private List<FirstBean.ResultsBean> results;
-    private FirstAdapter adapter;
-    private boolean isLoad;
-    private boolean isFirst;
-    private boolean isRefresh;
+    private List<HistoryBean.ResultBean> result;
+    private HistoryAdapter adapter;
 
     @Override
     protected void loadData() {
-        isFirst = true;
-        mPresenter.loadData(category, pageNum);
-        LoadingDialogUtils.show(getActivity());
+        requestMap.put("key", AppUtil.JUHE_KEY);
+        requestMap.put("v", "1.0");
+        requestMap.put("month", "10");
+        requestMap.put("day", "1");
+        mPresenter.loadData(requestMap);
+        LoadingDialogUtils.show((Activity) context);
     }
 
     @Override
     protected void initFragmentView(View view) {
         thirdRefresh = view.findViewById(R.id.thirdRefresh);
         thirdRv = view.findViewById(R.id.thirdRv);
-
-        TabLayout tabLayout = getActivity().findViewById(R.id.tablayout);
-        category = tabLayout.getTabAt(2).getText().toString();
-
-        adapter = new FirstAdapter(R.layout.list_item, results);
+        adapter = new HistoryAdapter(R.layout.list_item, result);
         thirdRv.setAdapter(adapter);
         thirdRv.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-
-        adapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
-            @Override
-            public void onLoadMoreRequested() {
-                pageNum += 1;
-                isLoad = true;
-                mPresenter.loadData(category, pageNum);
-            }
-        }, thirdRv);
-
-        thirdRefresh.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                pageNum = 1;
-                isRefresh = true;
-                mPresenter.loadData(category, pageNum);
-            }
-        });
-
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                FirstBean.ResultsBean item = (FirstBean.ResultsBean) adapter.getItem(position);
-                Intent intent = new Intent(context, WebActivity.class);
-                intent.putExtra("url", item.getUrl());
+                HistoryBean.ResultBean item = (HistoryBean.ResultBean) adapter.getItem(position);
+                int id = item.getId();
+                Intent intent = new Intent(getActivity(), HistoryDetailActivity.class);
                 startActivity(intent);
             }
         });
-
     }
 
     @Override
@@ -104,40 +78,22 @@ public class ThirdFragment extends BaseFragment<ThirdContract.IView, ThirdPresen
 
     @Override
     public void responseData(final String string) {
+
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 LoadingDialogUtils.dismiss();
+                HistoryBean historyBean = gson.fromJson(string, HistoryBean.class);
 
-                FirstBean bean = gson.fromJson(string, FirstBean.class);
-                results = bean.getResults();
-
-                if (results.size() != 0) {
-
-                    if (isLoad) {
-                        adapter.addData(results);
-                        adapter.loadMoreComplete();
-                        isLoad = false;
+                if (historyBean.getReason().contains("请求成功")) {
+                    result = historyBean.getResult();
+                    if (result.size() != 0 && result != null) {
+                        adapter.addData(result);
                     }
-
-                    if (isFirst) {
-                        adapter.addData(results);
-                    }
-
-                    if (isRefresh) {
-                        adapter.setNewData(results);
-                        thirdRefresh.finishRefresh();
-                        isRefresh = false;
-                    }
-
-
-                } else {
-                    isLoad = false;
-                    isRefresh = false;
-                    adapter.loadMoreEnd();
-                    thirdRefresh.finishRefresh();
                 }
             }
         });
+
     }
+
 }

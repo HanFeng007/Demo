@@ -70,7 +70,6 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
     @Override
     public void onResume() {
         super.onResume();
-        Log.e(this.getClass().getSimpleName().toString(), "onResume：");
         isLoadData();
     }
 
