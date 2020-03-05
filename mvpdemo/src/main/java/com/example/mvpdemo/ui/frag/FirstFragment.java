@@ -1,6 +1,7 @@
 package com.example.mvpdemo.ui.frag;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 
@@ -17,6 +18,7 @@ import com.example.mvpdemo.bean.FirstBean;
 import com.example.mvpdemo.contract.FirstContract;
 import com.example.mvpdemo.presenter.FirstPresenter;
 import com.example.mvpdemo.ui.act.WebActivity;
+import com.example.mvpdemo.utils.AppUtil;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -89,10 +91,20 @@ public class FirstFragment extends BaseFragment<FirstContract.IView, FirstPresen
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                FirstBean.ResultsBean item = (FirstBean.ResultsBean) adapter.getItem(position);
-                Intent intent = new Intent(context, WebActivity.class);
-                intent.putExtra("url", item.getUrl());
-                startActivity(intent);
+                final FirstBean.ResultsBean item = (FirstBean.ResultsBean) adapter.getItem(position);
+                AppUtil.getDialog(getActivity())
+                        .setTitle(R.string.dialog_hint)
+                        .setMessage(R.string.dialog_direction)
+                        .setPositiveButton(R.string.dialog_confirm, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(context, WebActivity.class);
+                                intent.putExtra("url", item.getUrl());
+                                startActivity(intent);
+
+                            }
+                        })
+                        .setNegativeButton(R.string.dialog_cancel, null).create().show();
             }
         });
 

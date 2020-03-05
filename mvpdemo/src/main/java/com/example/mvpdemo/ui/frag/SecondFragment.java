@@ -110,13 +110,13 @@ public class SecondFragment extends BaseFragment<SecondContract.IView, SecondPre
 
     @Override
     public void responseData(final String string) {
-        LoadingDialogUtils.dismiss();
-
-        FirstBean bean = gson.fromJson(string, FirstBean.class);
-        results = bean.getResults();
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                LoadingDialogUtils.dismiss();
+
+                FirstBean bean = gson.fromJson(string, FirstBean.class);
+                results = bean.getResults();
                 if (results.size() != 0) {
 
                     if (isLoad) {

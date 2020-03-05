@@ -4,8 +4,12 @@
 
 
     <string name="dialog_hint">提示</string>
-    <string name="dialog_warn">将要打开一个新的页面</string>
+    <string name="dialog_direction">将要打开一个新的页面</string>
     <string name="dialog_confirm">确定</string>
     <string name="dialog_cancel">取消</string>
+
+    <string name="net_hint">无网络</string>
+    <string name="net_direction">当前无网络,请连接网络</string>
+
 
 </resources>
