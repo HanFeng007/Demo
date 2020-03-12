@@ -12,11 +12,7 @@ import androidx.appcompat.app.AlertDialog;
  */
 public class AppUtil {
 
-
-
-
-
-
+    //OKHTTP使用
     public static String initialUrl = "http://gank.io/api/data/";
 
     public static String generateUrl(String dataCategory, int pageNum) {
@@ -24,13 +20,10 @@ public class AppUtil {
         return finalUrl;
     }
 
+    //retrofit使用
+    public static String BASE_URL = "http://gank.io/api/";
 
-
-
-
-
-
-
+    //通用弹框
     static AlertDialog.Builder builder;
 
     public static AlertDialog.Builder getDialog(Context context) {
@@ -42,18 +35,7 @@ public class AppUtil {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-    public static final String JUHE_KEY="68f77894f97f2da8dae4029db09aa92e";
-    public static final String JUHE_API="http://api.juheapi.com/japi/";
+    public static final String JUHE_KEY = "68f77894f97f2da8dae4029db09aa92e";
+    public static final String JUHE_API = "http://api.juheapi.com/japi/";
 
 }

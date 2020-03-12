@@ -6,27 +6,18 @@ import java.util.List;
  * @ClassName: HistoryBean
  * @Description:
  * @Author: Administrator
- * @CreateDate: 2020/3/5 17:36
+ * @CreateDate: 2020/3/6 10:38
  */
 public class HistoryBean {
-
     /**
-     * error_code : 0
+     * result : [{"_id":"19241001","title":"美国总统吉米·卡特出生","pic":"http://juheimg.oss-cn-hangzhou.aliyuncs.com/toh/201110/2/467826820.jpg","year":1924,"month":10,"day":1,"des":"在96年前的今天，1924年10月1日 (农历九月初三)，美国总统吉米·卡特出生。","content":"在96年前的今天，1924年10月1日 (农历九月初三)，美国总统吉米·卡特出生。\n","lunar":"甲子年九月初三"}]
      * reason : 请求成功！
-     * result : [{"day":1,"des":"1907年11月1日 电影导演吴永刚诞生 　　吴永刚，1907年11月1日生于江苏吴县。1932年后参加影片《三个摩登女性》、《母性之光》的拍摄工作。1934年在联华影片公司编导处女作《神女》，一举成名，...","id":9000,"lunar":"丁未年九月廿六","month":11,"pic":"","title":"电影导演吴永刚诞生","year":1907},{"day":1,"des":"1902年11月1日 挪威作家格里格诞生 　　格里格，1902年11月1日生于卑尔根。挪威作家。 　　青年时代在奥斯陆和牛津求学，好旅行。1924年出版描写海员生活的小说《航船在前进》。1926年至1927年在...","id":9010,"lunar":"壬寅年十月初二","month":11,"pic":"","title":"挪威作家格里格诞生","year":1902},{"day":1,"des":"1911年11月1日，清廷宣布解散皇族内阁，任命袁世凯为内阁总理大臣，要他赶快从前线回京，筹组\u201c责任内阁\u201d。11月13日，袁世凯抵达北京，16日组织新内阁，以梁郭彦为外务大臣，赵秉钧为民政大臣，...","id":3577,"lunar":"辛亥年九月十一","month":11,"pic":"","title":"袁世凯出任清朝内阁总理大臣","year":1911}]
+     * error_code : 0
      */
 
-    private int error_code;
     private String reason;
+    private int error_code;
     private List<ResultBean> result;
-
-    public int getError_code() {
-        return error_code;
-    }
-
-    public void setError_code(int error_code) {
-        this.error_code = error_code;
-    }
 
     public String getReason() {
         return reason;
@@ -34,6 +25,14 @@ public class HistoryBean {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public int getError_code() {
+        return error_code;
+    }
+
+    public void setError_code(int error_code) {
+        this.error_code = error_code;
     }
 
     public List<ResultBean> getResult() {
@@ -46,24 +45,75 @@ public class HistoryBean {
 
     public static class ResultBean {
         /**
+         * _id : 19241001
+         * title : 美国总统吉米·卡特出生
+         * pic : http://juheimg.oss-cn-hangzhou.aliyuncs.com/toh/201110/2/467826820.jpg
+         * year : 1924
+         * month : 10
          * day : 1
-         * des : 1907年11月1日 电影导演吴永刚诞生 　　吴永刚，1907年11月1日生于江苏吴县。1932年后参加影片《三个摩登女性》、《母性之光》的拍摄工作。1934年在联华影片公司编导处女作《神女》，一举成名，...
-         * id : 9000
-         * lunar : 丁未年九月廿六
-         * month : 11
-         * pic :
-         * title : 电影导演吴永刚诞生
-         * year : 1907
+         * des : 在96年前的今天，1924年10月1日 (农历九月初三)，美国总统吉米·卡特出生。
+         * content : 在96年前的今天，1924年10月1日 (农历九月初三)，美国总统吉米·卡特出生。
+         * lunar : 甲子年九月初三
          */
 
+        private String _id;
+        private String title;
+        private String pic;
+        private int year;
+        private int month;
         private int day;
         private String des;
-        private int id;
+        private String content;
         private String lunar;
-        private int month;
-        private String pic;
-        private String title;
-        private int year;
+        private boolean isDetail;//自定义类型
+
+        public boolean isDetail() {
+            return isDetail;
+        }
+
+        public void setDetail(boolean detail) {
+            isDetail = detail;
+        }
+
+        public String get_id() {
+            return _id;
+        }
+
+        public void set_id(String _id) {
+            this._id = _id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getPic() {
+            return pic;
+        }
+
+        public void setPic(String pic) {
+            this.pic = pic;
+        }
+
+        public int getYear() {
+            return year;
+        }
+
+        public void setYear(int year) {
+            this.year = year;
+        }
+
+        public int getMonth() {
+            return month;
+        }
+
+        public void setMonth(int month) {
+            this.month = month;
+        }
 
         public int getDay() {
             return day;
@@ -81,12 +131,12 @@ public class HistoryBean {
             this.des = des;
         }
 
-        public int getId() {
-            return id;
+        public String getContent() {
+            return content;
         }
 
-        public void setId(int id) {
-            this.id = id;
+        public void setContent(String content) {
+            this.content = content;
         }
 
         public String getLunar() {
@@ -95,38 +145,6 @@ public class HistoryBean {
 
         public void setLunar(String lunar) {
             this.lunar = lunar;
-        }
-
-        public int getMonth() {
-            return month;
-        }
-
-        public void setMonth(int month) {
-            this.month = month;
-        }
-
-        public String getPic() {
-            return pic;
-        }
-
-        public void setPic(String pic) {
-            this.pic = pic;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public int getYear() {
-            return year;
-        }
-
-        public void setYear(int year) {
-            this.year = year;
         }
     }
 }

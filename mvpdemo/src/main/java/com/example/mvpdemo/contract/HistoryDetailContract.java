@@ -1,23 +1,22 @@
 package com.example.mvpdemo.contract;
 
-import com.example.mvpdemo.bean.HistoryBean;
 import com.example.mvpdemo.model.ModelCallback;
 
 import java.util.HashMap;
 
 /**
- * @ClassName: ThirdContract
+ * @ClassName: HistoryDetailContract
  * @Description:
  * @Author: Administrator
- * @CreateDate: 2020/3/3 14:39
+ * @CreateDate: 2020/3/6 9:12
  */
-public interface ThirdContract {
-    interface IView {
-
-        void responseData(HistoryBean string);
-    }
-
+public interface HistoryDetailContract {
     interface IModel {
         void requestData(HashMap<String, String> requestMap, ModelCallback callback);
+    }
+
+    interface IView {
+
+        void recieveData(String string);
     }
 }

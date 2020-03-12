@@ -93,6 +93,8 @@ public class SecondFragment extends BaseFragment<SecondContract.IView, SecondPre
                 Intent intent = new Intent(context, WebActivity.class);
                 intent.putExtra("url", item.getUrl());
                 startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.activity_open, 0);
+
             }
         });
 
@@ -109,14 +111,14 @@ public class SecondFragment extends BaseFragment<SecondContract.IView, SecondPre
     }
 
     @Override
-    public void responseData(final String string) {
+    public void responseData(final List<FirstBean.ResultsBean> results) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 LoadingDialogUtils.dismiss();
 
-                FirstBean bean = gson.fromJson(string, FirstBean.class);
-                results = bean.getResults();
+//                FirstBean bean = gson.fromJson(string, FirstBean.class);
+//                results = bean.getResults();
                 if (results.size() != 0) {
 
                     if (isLoad) {

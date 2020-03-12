@@ -6,16 +6,28 @@
     android:orientation="vertical"
     tools:context=".ui.frag.FirstFragment">
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/thirdRefresh"
+    <!--    <com.scwang.smartrefresh.layout.SmartRefreshLayout-->
+    <!--        android:id="@+id/thirdRefresh"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent">-->
+    <!--    选择日期-->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/thirdRv"
+        <Button
+            android:id="@+id/btn_chooseDate"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_circle"
+            android:text="选择日期" />
+    </LinearLayout>
 
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/thirdRv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!--    </com.scwang.smartrefresh.layout.SmartRefreshLayout>-->
 
 </LinearLayout>

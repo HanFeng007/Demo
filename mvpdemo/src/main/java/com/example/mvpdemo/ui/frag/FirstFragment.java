@@ -89,7 +89,7 @@ public class FirstFragment extends BaseFragment<FirstContract.IView, FirstPresen
                 mPresenter.loadData(localCategory, pageNum);
             }
         });
-
+//条目点击事件
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -103,7 +103,7 @@ public class FirstFragment extends BaseFragment<FirstContract.IView, FirstPresen
                                 Intent intent = new Intent(context, WebActivity.class);
                                 intent.putExtra("url", item.getUrl());
                                 startActivity(intent);
-
+                                getActivity().overridePendingTransition(R.anim.activity_open, 0);
                             }
                         })
                         .setNegativeButton(R.string.dialog_cancel, null).create().show();
@@ -123,10 +123,10 @@ public class FirstFragment extends BaseFragment<FirstContract.IView, FirstPresen
     }
 
     @Override
-    public void recieveData(final String string) {
+    public void recieveData(final List<FirstBean.ResultsBean> results) {
         //解析json,得到数据集
-        FirstBean firstBean = gson.fromJson(string, FirstBean.class);
-        results = firstBean.getResults();
+//        FirstBean firstBean = gson.fromJson(string, FirstBean.class);
+//        results = firstBean.getResults();
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

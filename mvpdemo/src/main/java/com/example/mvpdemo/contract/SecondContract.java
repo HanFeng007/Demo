@@ -1,6 +1,9 @@
 package com.example.mvpdemo.contract;
 
+import com.example.mvpdemo.bean.FirstBean;
 import com.example.mvpdemo.model.ModelCallback;
+
+import java.util.List;
 
 /**
  * @ClassName: SecondContract
@@ -15,6 +18,6 @@ public interface SecondContract {
 
     interface IView {
 
-        void responseData(String string);
+        void responseData(List<FirstBean.ResultsBean> string);
     }
 }

@@ -36,6 +36,8 @@ public class WebActivity extends FragmentActivity {
         setContentView(R.layout.activity_web);
         url = getIntent().getStringExtra("url");
         initView();
+        overridePendingTransition(0, R.anim.activity_close);
+
     }
 
     private void initView() {

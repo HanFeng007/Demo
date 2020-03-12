@@ -23,8 +23,13 @@ public class HistoryAdapter extends BaseQuickAdapter<HistoryBean.ResultBean, Bas
     @Override
     protected void convert(BaseViewHolder helper, HistoryBean.ResultBean item) {
 
-        helper.getView(R.id.title_tv).setVisibility(View.VISIBLE);
-        helper.setText(R.id.title_tv, item.getTitle())
-                .setText(R.id.desc_tv, item.getDes());
+            helper.getView(R.id.title_tv).setVisibility(View.VISIBLE);
+            helper.getView(R.id.content_tv).setVisibility(View.VISIBLE);
+
+            helper.setText(R.id.title_tv, item.getTitle())
+                    .setText(R.id.desc_tv, item.getDes())
+                    .setText(R.id.author_tv, item.getLunar())
+                    .setText(R.id.content_tv, item.getContent());
+
     }
 }

@@ -13,8 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.act.HistoryDetailActivity"></activity>
-        <!--         android:networkSecurityConfig="@xml/config"  可以在安卓9以上的机子使用 -->
+        <activity android:name=".ui.act.RetroPracActivity"></activity>
+        <activity android:name=".ui.act.ScrollingActivity" />
+        <activity android:name=".ui.act.HistoryDetailActivity" /> <!-- android:networkSecurityConfig="@xml/config"  可以在安卓9以上的机子使用 -->
         <meta-data
             android:name="android.max_aspect"
             android:value="2.4" /> <!-- 适配华为（huawei）刘海屏 -->

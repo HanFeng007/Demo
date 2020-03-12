@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentActivity;
  */
 public abstract class BaseActivity<V, P extends BasePresenter<V>> extends FragmentActivity {
 
-    private P mPresenter;
+    protected P mPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

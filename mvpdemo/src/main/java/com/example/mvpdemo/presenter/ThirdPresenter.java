@@ -1,9 +1,11 @@
 package com.example.mvpdemo.presenter;
 
 import com.example.mvpdemo.base.BasePresenter;
+import com.example.mvpdemo.bean.HistoryBean;
 import com.example.mvpdemo.contract.ThirdContract;
 import com.example.mvpdemo.model.ModelCallback;
 import com.example.mvpdemo.model.ThreeModelImpl;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 
@@ -33,7 +35,8 @@ public class ThirdPresenter extends BasePresenter<ThirdContract.IView> {
         model.requestData(requestMap, new ModelCallback() {
             @Override
             public void invoke(String string) {
-                getView().responseData(string);
+                HistoryBean historyBean = new Gson().fromJson(string, HistoryBean.class);
+                getView().responseData(historyBean);
             }
         });
     }

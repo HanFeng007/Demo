@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.mvpdemo.R;
 import com.example.mvpdemo.ui.frag.FirstFragment;
+import com.example.mvpdemo.ui.frag.FourFragment;
 import com.example.mvpdemo.ui.frag.SecondFragment;
 import com.example.mvpdemo.ui.frag.ThirdFragment;
 import com.google.android.material.tabs.TabLayout;
@@ -48,6 +49,7 @@ public class MainActivity extends FragmentActivity {
         fragments.add(new FirstFragment());
         fragments.add(new SecondFragment());
         fragments.add(new ThirdFragment());
+        fragments.add(new FourFragment());
 
         viewpager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @NonNull
