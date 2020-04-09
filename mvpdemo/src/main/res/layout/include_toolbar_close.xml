@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:background="@color/colorPrimary">
-
+<!--折叠时toolbar的布局-->
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/iv_scan"
+        android:id="@+id/iv_scan_close"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_alignParentLeft="true"
@@ -15,29 +15,30 @@
         android:src="@mipmap/ic_scan"/>
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/iv_pay"
+        android:id="@+id/iv_pay_close"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@+id/iv_scan"
+        android:layout_toRightOf="@+id/iv_scan_close"
         android:src="@mipmap/ic_payment"/>
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/iv_charge"
+        android:id="@+id/iv_charge_close"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@+id/iv_pay"
+        android:layout_toRightOf="@+id/iv_pay_close"
         android:src="@mipmap/ic_transfer"/>
 
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/cardBag_close"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@+id/iv_charge"
+        android:layout_toRightOf="@+id/iv_charge_close"
         android:src="@mipmap/ic_card"/>
 
     <androidx.appcompat.widget.AppCompatImageView

@@ -69,6 +69,7 @@ public class MainActivity extends FragmentActivity {
         titles.add("Android");
         titles.add("iOS");
         titles.add("历史事件列表");
+        titles.add("折叠吸顶");
         for (int i = 0; i < titles.size(); i++) {
             tablayout.getTabAt(i).setText(titles.get(i));
         }
