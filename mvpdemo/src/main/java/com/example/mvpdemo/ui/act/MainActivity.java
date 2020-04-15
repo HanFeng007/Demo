@@ -64,6 +64,7 @@ public class MainActivity extends FragmentActivity {
             }
         });
         tablayout.setupWithViewPager(viewpager);
+
         //tablayout的数据源
         titles = new ArrayList<>();
         titles.add("Android");
@@ -73,6 +74,5 @@ public class MainActivity extends FragmentActivity {
         for (int i = 0; i < titles.size(); i++) {
             tablayout.getTabAt(i).setText(titles.get(i));
         }
-
     }
 }
