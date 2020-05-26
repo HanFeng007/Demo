@@ -26,19 +26,21 @@ import okhttp3.ResponseBody;
 public class OkHttpUtil {
     static OkHttpUtil okHttpUtil;
     private OkHttpClient.Builder builder;
-    private Request.Builder requestBuilder;
     private OkHttpClient okHttpClient;
+    private static SSLContext sslContext;
 
     private OkHttpUtil() {
         builder = new OkHttpClient.Builder();
-        okHttpClient = builder.addInterceptor(new RequestLoggerInterceptor())
-                .addInterceptor(new ResponseLoggerInterceptor())
-                .connectTimeout(10, TimeUnit.SECONDS)
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(new ResponseLoggerInterceptor());
+        }
+        okHttpClient = builder.connectTimeout(10, TimeUnit.SECONDS)
                 .callTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
+//                .sslSocketFactory(getSSLSocketFactory())//配置
+//                .hostnameVerifier(getHostnameVerifier())//配置
                 .build();
-        requestBuilder = new Request.Builder();//省的每次都new  request操作,直接builder出来,随后需要什么往里加,build出来即可
     }
 
     public static OkHttpUtil getInstance() {
@@ -52,33 +54,43 @@ public class OkHttpUtil {
         return okHttpUtil;
     }
 
-    public void httpGet(String url, final ICallback callback) {
-        Request request = requestBuilder.url(url).build();
-        okHttpClient.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                callback.invoke("数据错误");
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                callback.invoke(response.body().string());
-            }
-        });
+    public void httpGet(String url, Context context, final ICallback callback) {
+        Request request = new Request.Builder().url(url).build();
+        Call call = okHttpClient.newCall(request);
+        excuteCall(call, callback, context);
     }
 
-    public void httpPost(String urlString, FormBody formBody, final ICallback callback) {
-        Request request = requestBuilder.url(urlString).method("POST", formBody).build();
-        okHttpClient.newCall(request).enqueue(new Callback() {
+    public void httpPost(String urlString, Context context, FormBody formBody, final ICallback callback) {
+        Request request = new Request.Builder().url(urlString).method("POST", formBody).build();
+        Call call = okHttpClient.newCall(request);
+        excuteCall(call, callback, context);
+    }
+
+    private void excuteCall(Call call, final ICallback callback, final Context context) {
+        LoadingDialogUtil.show((Activity) context);
+
+        call.enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                callback.invoke("数据错误");
 
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                callback.invoke(response.body().string());
+                LoadingDialogUtil.dismiss();
+                final String string = response.body().string();
+                final JSONObject jsonObject = JSON.parseObject(string);
+                ((Activity) context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int errorCode = jsonObject.getIntValue("errorCode");
+                        if (errorCode == 0) {
+                            callback.invoke(string);
+                        } else {
+                            callback.invokeFail("服务错误");
+                        }
+                    }
+                });
             }
         });
     }
@@ -88,32 +100,23 @@ public class OkHttpUtil {
      */
     public interface ICallback {
         void invoke(String string);
+
+        void invokeFail(String string);
     }
 
     /**
-     * 请求拦截器
+     * 请求响应拦截器
      */
-    static class RequestLoggerInterceptor implements Interceptor {
-
+    static class ResponseLoggerInterceptor implements Interceptor {
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
-
+            Log.e(this.getClass().getSimpleName(), "-------HTTP START------");
             Log.e(this.getClass().getSimpleName(), "url    =  : " + request.url());
             Log.e(this.getClass().getSimpleName(), "method =  : " + request.method());
             Log.e(this.getClass().getSimpleName(), "headers=  : " + request.headers());
             Log.e(this.getClass().getSimpleName(), "body   =  : " + request.body());
 
-            return chain.proceed(request);
-        }
-    }
-
-    /**
-     * 响应拦截器
-     */
-    static class ResponseLoggerInterceptor implements Interceptor {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
             Response response = chain.proceed(chain.request());
 
             Log.e(this.getClass().getSimpleName(), "code    =  : " + response.code());
@@ -125,12 +128,59 @@ public class OkHttpUtil {
                 String string = response.body().string();
                 Log.e(this.getClass().getSimpleName(), "mediaType=  :  " + mediaType.toString());
                 Log.e(this.getClass().getSimpleName(), "string   =  : " + string);
+                Log.e(this.getClass().getSimpleName(), "-------HTTP END------");
                 ResponseBody responseBody = ResponseBody.create(mediaType, string);
                 return response.newBuilder().body(responseBody).build();
             } else {
+                Log.e(this.getClass().getSimpleName(), "-------HTTP END------");
                 return response;
             }
         }
     }
+
+
+    //获取这个SSLSocketFactory
+    private SSLSocketFactory getSSLSocketFactory() {
+        try {
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, getTrustManager(), new SecureRandom());
+            return sslContext.getSocketFactory();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //获取TrustManager
+    private TrustManager[] getTrustManager() {
+        TrustManager[] trustAllCerts = new TrustManager[]{
+                new X509TrustManager() {
+                    @Override
+                    public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                    }
+
+                    @Override
+                    public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                    }
+
+                    @Override
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return new X509Certificate[]{};
+                    }
+                }
+        };
+        return trustAllCerts;
+    }
+
+    //获取HostnameVerifier
+    private static HostnameVerifier getHostnameVerifier() {
+        HostnameVerifier hostnameVerifier = new HostnameVerifier() {
+            @Override
+            public boolean verify(String s, SSLSession sslSession) {
+                return true;
+            }
+        };
+        return hostnameVerifier;
+    }
+
 }
 
